@@ -1,16 +1,32 @@
-# This is a sample Python script.
+from typing import Optional, List
 
-# Press ⇧F10 to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from fastapi import FastAPI
+from pydantic import BaseModel
+from beans import Task
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+app = FastAPI()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+class TaskItem(BaseModel):
+    id: int
+    name: str
+    content: str
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+@app.get("/tasks")
+def get_tasks():
+    arr: List[Task] = []
+    for i in range(5):
+        task = Task(i, f"name{i}", f"content{i}")
+        arr.append(task)
+    return arr
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Optional[str] = None):
+    return {"item_id": item_id, "q": q}
