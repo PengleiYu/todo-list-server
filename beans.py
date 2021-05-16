@@ -3,3 +3,6 @@ class Task(object):
         self.id = id
         self.name = name
         self.content = content
+
+    def __repr__(self):
+        return f'Task [ id:{self.id}, name:{self.name}, content:{self.content} ]'
